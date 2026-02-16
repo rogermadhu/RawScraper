@@ -40,13 +40,11 @@ RUN npm ci --silent
 
 FROM base AS builder
 ENV NODE_ENV=production
-RUN npm install --no-audit --silent
 COPY . .
 RUN npm run build
 
 FROM base AS dev
 ENV NODE_ENV=development
-RUN npm install --no-audit --silent
 COPY . .
 EXPOSE 65000
 USER rogerm
