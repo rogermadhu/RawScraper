@@ -1,11 +1,21 @@
 #!/usr/bin/env python3
+"""
+Web scraper module using BeautifulSoup and requests
+"""
 import sys
 import json
 import requests
 import certifi
 from bs4 import BeautifulSoup
 
+
 def scrape():
+    """
+    Scrape a webpage and extract the title.
+    
+    Returns:
+        dict: Contains 'url', 'title', and optionally 'warning' or 'error'
+    """
     url = 'https://en.wikipedia.org/wiki/Plain_text'
     headers = {'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36'}
     try:
@@ -24,7 +34,7 @@ def scrape():
                 if h1:
                     title = h1.get_text().strip()
         return {'url': url, 'title': title}
-    
+
     except requests.exceptions.SSLError:
         # Fallback: try without verification and return a warning
         try:
@@ -46,6 +56,7 @@ def scrape():
             return {'error': str(e)}
     except Exception as e:
         return {'error': str(e)}
+
 
 if __name__ == '__main__':
     print(json.dumps(scrape()))

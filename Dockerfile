@@ -32,10 +32,17 @@ RUN adduser \
 # Copy dependency manifests first to leverage layer caching
 COPY package*.json ./
 COPY requirements.txt ./
+COPY python ./python
 
 # Install Python requirements and Node dependencies
 RUN pip3 install --no-cache-dir -r requirements.txt
 RUN npm ci --silent
+
+FROM base AS builder
+ENV NODE_ENV=production
+RUN npm install --no-audit --silent
+COPY . .
+RUN npm run build
 
 FROM base AS dev
 ENV NODE_ENV=development
@@ -47,7 +54,9 @@ CMD ["npm","run","dev"]
 
 FROM base AS prod
 ENV NODE_ENV=production
-COPY . .
+COPY --from=builder /app/dist ./dist
+COPY python ./python
+COPY requirements.txt ./
 RUN npm prune --production --silent || true
 HEALTHCHECK --interval=30s --timeout=5s --start-period=5s --retries=3 \
     CMD curl -f http://localhost:65000/ || exit 1

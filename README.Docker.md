@@ -21,8 +21,24 @@ docs for more detail on building and pushing.
 ### References
 * [Docker's Python guide](https://docs.docker.com/language/python/)
 
+
+# Command notes
 To start:
 - npm run dev
 
 Stop from workspace root
 - pkill -f nodemon || kill $(lsof -ti:65000) || true
+
+activate python virtual env
+- . .venv/bin/activate
+
+
+# Run the dev server (already running)
+- npm run dev
+
+# Or test the local CI pipeline
+- ./scripts/local-ci.sh
+
+# Or build for production
+- npm run build
+- npm start
